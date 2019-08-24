@@ -213,7 +213,7 @@ Resources:
              "apt install -y nginx\n",
              "cd /var/www/html\n",
              "rm index.nginx-debian.html\n",
-             "wget https://raw.githubusercontent.com/Schibes/Schibes-challenge/master/index.nginx-debian.html\n",
+             "wget https://raw.githubusercontent.com/Schibes/Schibes-cloudformation-demo/master/index.nginx-debian.html\n",
              "systemctl enable nginx\n",
              "systemctl restart nginx\n"
           ]
