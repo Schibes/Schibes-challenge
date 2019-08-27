@@ -251,3 +251,4 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       DhcpOptionsId: !Ref DHCPopt
+...
