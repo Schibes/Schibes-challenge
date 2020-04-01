@@ -199,7 +199,7 @@ Resources:
     Type: 'AWS::AutoScaling::LaunchConfiguration'
     DependsOn: VPCGatewayAttachment
     Properties:
-      ImageId: 'ami-0b37e9efc396e4c38'
+      ImageId: 'ami-02e30ba14d8ffa6e6'
       InstanceType: t2.micro
       SecurityGroups:
         - !Ref SecurityGroup
