@@ -7,14 +7,14 @@ Parameters:
   WebServerKeyName:
     Description: "The key pair to establish a SSH connection to the web servers."
     Type: "AWS::EC2::KeyPair::KeyName"
-  myDomain: 
+  myDomain:
     Description: "Domain of the website (like example.com) - Must be registered via AWS Route 53 to work with this template."
     Type: String
   myHostedDomain:
     Description: "Domain of the website WITH TRAILING DOT (like example.com.) - Must be registered via AWS Route 53 to work with this template."
     Type: String
   FQDN:
-    Description: "Fully qualified domain name of the website (like www.example.com)" 
+    Description: "Fully qualified domain name of the website (like www.example.com)"
     Type: String
 # Resources Section. This demo consists of 20 separate AWS resources built in CloudFormation.
 Resources:
@@ -60,7 +60,7 @@ Resources:
           ToPort: 22
       SecurityGroupEgress:
         - CidrIp: 0.0.0.0/0
-          IpProtocol: '-1'  
+          IpProtocol: '-1'
 # 4) Internet Gateway attachment to VPC
   VPCGatewayAttachment:
     Type: 'AWS::EC2::VPCGatewayAttachment'
@@ -71,7 +71,7 @@ Resources:
   Subnet1:
     Type: 'AWS::EC2::Subnet'
     Properties:
-      AvailabilityZone: us-west-2c
+      AvailabilityZone: us-west-2a
       CidrBlock: 10.20.30.0/24
       VpcId: !Ref VPC
       Tags:
@@ -86,7 +86,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: Demo Subnet II  
+          Value: Demo Subnet II
 # 7) Route Table I
   RouteTable1:
     Type: 'AWS::EC2::RouteTable'
@@ -104,13 +104,13 @@ Resources:
       GatewayId: !Ref InternetGateway
     DependsOn: InternetGateway
 # 9) Associate Subnet I to Route Table I
-  RouteTableAssociationA:
+  RouteTableAssociation1:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       SubnetId: !Ref Subnet1
       RouteTableId: !Ref RouteTable1
 # 10) Associate Subnet II to Route Table I
-  RouteTableAssociationA:
+  RouteTableAssociation2:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       SubnetId: !Ref Subnet2
@@ -137,7 +137,7 @@ Resources:
       SecurityGroups:
         - !Ref SecurityGroup
       IpAddressType: ipv4
-# 13) DNS alias record - HostedZoneID is different for every AWS Region! 
+# 13) DNS alias record - HostedZoneID is different for every AWS Region!
 # Check https://docs.aws.amazon.com/general/latest/gr/rande.html#elb_region to modify
   DNSalias:
     Type: 'AWS::Route53::RecordSetGroup'
@@ -163,7 +163,7 @@ Resources:
             Host: '#{host}'
             Path: '/#{path}'
             Query: '#{query}'
-            StatusCode: HTTP_301          
+            StatusCode: HTTP_301
       LoadBalancerArn: !Ref LoadBalancer
       Port: '80'
       Protocol: HTTP
@@ -172,11 +172,11 @@ Resources:
     Type: 'AWS::ElasticLoadBalancingV2::Listener'
     DependsOn: LoadBalancer
     Properties:
-      Certificates: 
+      Certificates:
         - CertificateArn: !Ref SiteCertificate
       DefaultActions:
         - Type: forward
-          TargetGroupArn: !Ref TargetGroup         
+          TargetGroupArn: !Ref TargetGroup
       LoadBalancerArn: !Ref LoadBalancer
       Port: '443'
       Protocol: HTTPS
@@ -210,12 +210,13 @@ Resources:
           - ''
           -  [
              "#!/bin/bash\n",
-             "apt install -y nginx\n",
+             "sudo apt -y update\n",
+             "sudo apt install -y nginx\n",
              "cd /var/www/html\n",
-             "rm index.nginx-debian.html\n",
-             "wget https://raw.githubusercontent.com/Schibes/Schibes-cloudformation-demo/master/index.nginx-debian.html\n",
-             "systemctl enable nginx\n",
-             "systemctl restart nginx\n"
+             "sudo rm index.nginx-debian.html\n",
+             "sudo wget https://raw.githubusercontent.com/Schibes/Schibes-cloudformation-demo/master/index.nginx-debian.html\n",
+             "sudo systemctl enable nginx\n",
+             "sudo systemctl restart nginx\n"
           ]
       InstanceMonitoring: 'false'
 # 18) Auto Scaling Group
